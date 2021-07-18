@@ -7,6 +7,8 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 
 public class TestSelenium {
+    private final Logger logger = LoggerFactory.getLogger(TestSelenium.class);
     private WebDriver driver;
     private Map<String, Object> vars;
     JavascriptExecutor js;
@@ -30,16 +33,18 @@ public class TestSelenium {
     }
     @Test
     public void testssologin() {
-        String url = "";
+        OpenidConnect connect = new OpenidConnect();
+        String url = connect.authorization_endpoint;
         String user = "jung915";
         String pass = "IamJung915";
         String captcha = "";
         // Test name: test-sso-login
         // Step # | name | target | value
         // 1 | open | /home?4 |
-        driver.get("url");
+        logger.info(url);
+        driver.get(url);
         // 2 | setWindowSize | 1854x1053 |
-        driver.manage().window().setSize(new Dimension(1854, 1053));
+        driver.manage().window().setSize(new Dimension(800, 600));
         // 3 | click | css=.sfHover div |
         driver.findElement(By.cssSelector(".sfHover div")).click();
         // 4 | click | id=id57 |

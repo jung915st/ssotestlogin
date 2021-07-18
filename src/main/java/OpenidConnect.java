@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,13 +17,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URI;
 
-@WebServlet(name = "OpenidConnect", urlPatterns = {"/eduopenid/login"})
+//@WebServlet(name = "OpenidConnect", urlPatterns = {"/eduopenid/login"})
 public class OpenidConnect extends HttpServlet {
     private static final long serialVersionUID = 2447533304172100227L;
     private final Logger logger = LoggerFactory.getLogger(OpenidConnect.class);
-    String clientid = "";
-    String callbackURI = "";
-    String openidServerURL = "";
+    String clientid = "c58032d18369506ee83b3112e3363b95";//www.sso.edu.tw
+    String callbackURI = "https://www.sso.edu.tw/cncreturnpage";
+    String openidServerURL = "https://oidc.tanet.edu.tw";
+    String authorization_endpoint;
 
 /*    public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -66,7 +66,7 @@ public class OpenidConnect extends HttpServlet {
             AuthenticationRequest authzReq = new AuthenticationRequest(
                     new URI(openidServerURL + "/oidc/v1/azp"),     //default URL -> https://oidc.tanet.edu.tw/oidc/v1/azp
                     new ResponseType("code"),
-                    Scope.parse("openid openid2 email profile eduinfo"),
+                    Scope.parse("openid email profile openid2 eduinfo"),//openid+email+profile+openid2+eduinfo
                     clientID,
                     callback,
                     state,
@@ -75,10 +75,17 @@ public class OpenidConnect extends HttpServlet {
             // 此為 Authrozation Code flow 的第一步
             logger.info("1.User authorization request");
             logger.info(authzReq.getEndpointURI().toString() + "?" + authzReq.toQueryString());
+
             //送出請求
             response.sendRedirect(authzReq.getEndpointURI().toString() + "?" + authzReq.toQueryString());
+
+            this.authorization_endpoint = authzReq.getEndpointURI().toString() + "?" + authzReq.toQueryString();
+
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
 }
