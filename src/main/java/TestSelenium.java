@@ -11,9 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.TimeUnit;
 
 
 public class TestSelenium {
@@ -21,20 +22,46 @@ public class TestSelenium {
     private WebDriver driver;
     private Map<String, Object> vars;
     JavascriptExecutor js;
+
+    public static class DriverInit {
+        public WebDriver driver;
+        private static DriverInit driverInit = null;
+
+        public static DriverInit getInstance() {
+            if (driverInit == null) {
+                driverInit = new DriverInit();
+            }
+            return driverInit;
+        }
+
+        private DriverInit() {
+            this.driver = new ChromeDriver();
+            this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            this.driver.get("******");
+        }
+
+        public WebDriver getDriver() {
+            return this.driver;
+        }
+    }
+
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        //driver = new ChromeDriver();
+        driver = DriverInit.getInstance().getDriver();
         js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
+        vars = new HashMap<>();
     }
     @After
     public void tearDown() {
         driver.quit();
     }
     @Test
-    public void testssologin() {
+    public void testssologin() throws URISyntaxException {
+
         OpenidConnect connect = new OpenidConnect();
-        String url = connect.authorization_endpoint;
+        //String url = connect.authorization_endpoint;
+        String url = connect.getAuthorization_endpoint();
         String user = "jung915";
         String pass = "IamJung915";
         String captcha = "";
